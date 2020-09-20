@@ -47,4 +47,33 @@ describe Curator do
       expect(subject.find_artist_by_id('1')).to eql(artist1)
     end
   end
+
+  describe '#photographs_by_artist' do
+    it 'returns a hash of artists and their photographs' do
+      artist1 = Artist.new({ id: '1', name: 'Henri Cartier-Bresson', born: '1908', died: '2004', country: 'France' })
+      artist2 = Artist.new({ id: '2', name: 'Ansel Adams', born: '1902', died: '1984', country: 'United States' })
+      artist3 = Artist.new({ id: '3', name: 'Diane Arbus', born: '1923', died: '1971', country: 'United States' })
+      subject.add_artist(artist1)
+      subject.add_artist(artist2)
+      subject.add_artist(artist3)
+
+      photo1 = Photograph.new({ id: '1', name: 'Rue Mouffetard, Paris (Boy with Bottles)', artist_id: '1', year: '1954' })
+      photo2 = Photograph.new({ id: '2', name: 'Moonrise, Hernandez', artist_id: '2', year: '1941' })
+      photo3 = Photograph.new({ id: '3', name: 'Identical Twins, Roselle, New Jersey', artist_id: '3', year: '1967' })
+      photo4 = Photograph.new({ id: '4', name: 'Monolith, The Face of Half Dome', artist_id: '3', year: '1927' })
+
+      subject.add_photograph(photo1)
+      subject.add_photograph(photo2)
+      subject.add_photograph(photo3)
+      subject.add_photograph(photo4)
+
+      hash = {
+        artist1.name => [photo1],
+        artist2.name => [photo2],
+        artist3.name => [photo3, photo4]
+      }
+
+      expect(subject.photographs_by_artist).to eql(hash)
+    end
+  end
 end
