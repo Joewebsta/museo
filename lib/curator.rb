@@ -27,4 +27,12 @@ class Curator
   def artists_with_multiple_photographs
     photographs_by_artist.select { |_artist, photos| photos.count >= 2 }.keys
   end
+
+  def photographs_take_by_artist_from(country)
+    artist_ids = artists.select { |artist| artist.country == country }.map(&:id)
+
+    photographs.each_with_object([]) do |photograph, array|
+      array << photograph if artist_ids.include?(photograph.artist_id)
+    end
+  end
 end
