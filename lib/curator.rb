@@ -23,4 +23,8 @@ class Curator
       hash[artist.name] = photographs.select { |photo| photo.artist_id == artist.id }
     end
   end
+
+  def artists_with_multiple_photographs
+    photographs_by_artist.select { |_artist, photos| photos.count >= 2 }.keys
+  end
 end
