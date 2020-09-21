@@ -152,4 +152,16 @@ describe Curator do
       expect(subject.photographs_taken_between(1950..1965)).to eql([photo1, photo4])
     end
   end
+
+  describe '#artists_photographs_by_age' do
+    it 'returns a hash of artist ages and the photographs they took' do
+      subject.load_artists('./data/artists.csv')
+      subject.load_photographs('./data/photographs.csv')
+
+      diane_arbus = subject.find_artist_by_id('3')
+      hash = { 44 => 'Identical Twins, Roselle, New Jersey', 39 => 'Child with Toy Hand Grenade in Central Park' }
+
+      expect(subject.artists_photographs_by_age(diane_arbus)).to eql(hash)
+    end
+  end
 end

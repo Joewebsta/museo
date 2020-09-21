@@ -54,4 +54,13 @@ class Curator
     years = year_range.to_a
     photographs.select { |photo| years.include?(photo.year.to_i) }
   end
+
+  def artists_photographs_by_age(artist)
+    artist_photos = photographs.select { |photo| photo.artist_id == artist.id }
+    artist_photos.each_with_object({}) do |photo, hash|
+      artist_age = photo.year.to_i - artist.born.to_i
+      hash[artist_age] = photo.name
+    end
+    # require 'pry'; binding.pry
+  end
 end
