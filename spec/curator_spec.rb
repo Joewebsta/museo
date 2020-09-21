@@ -67,9 +67,9 @@ describe Curator do
       subject.add_photograph(photo4)
 
       hash = {
-        artist1.name => [photo1],
-        artist2.name => [photo2],
-        artist3.name => [photo3, photo4]
+        artist1 => [photo1],
+        artist2 => [photo2],
+        artist3 => [photo3, photo4]
       }
 
       expect(subject.photographs_by_artist).to eql(hash)

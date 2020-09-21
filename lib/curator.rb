@@ -3,7 +3,8 @@ require './lib/artist'
 require 'csv'
 
 class Curator
-  attr_reader :artists, :photographs
+  attr_reader :artists,
+              :photographs
 
   def initialize
     @artists = []
@@ -24,19 +25,18 @@ class Curator
 
   def photographs_by_artist
     artists.each_with_object({}) do |artist, hash|
-      hash[artist.name] = photographs.select { |photo| photo.artist_id == artist.id }
+      hash[artist] = photographs.select { |photo| photo.artist_id == artist.id }
     end
   end
 
   def artists_with_multiple_photographs
-    photographs_by_artist.select { |_artist, photos| photos.count >= 2 }.keys
+    photographs_by_artist.select { |_artist, photos| photos.count >= 2 }.keys.map(&:name)
   end
 
   def photographs_taken_by_artist_from(country)
-    artist_ids = artists.select { |artist| artist.country == country }.map(&:id)
-
-    photographs.each_with_object([]) do |photograph, array|
-      array << photograph if artist_ids.include?(photograph.artist_id)
+    photographs.find_all do |photo|
+      artist = find_artist_by_id(photo.artist_id)
+      artist.country == country
     end
   end
 
@@ -50,17 +50,15 @@ class Curator
     artist_data.each { |artist| add_artist(Artist.new(artist)) }
   end
 
-  def photographs_taken_between(year_range)
-    years = year_range.to_a
-    photographs.select { |photo| years.include?(photo.year.to_i) }
+  def photographs_taken_between(range)
+    photographs.select { |photo| range.include?(photo.year.to_i) }
   end
 
   def artists_photographs_by_age(artist)
-    artist_photos = photographs.select { |photo| photo.artist_id == artist.id }
+    artist_photos = photographs_by_artist[artist]
     artist_photos.each_with_object({}) do |photo, hash|
       artist_age = photo.year.to_i - artist.born.to_i
       hash[artist_age] = photo.name
     end
-    # require 'pry'; binding.pry
   end
 end
