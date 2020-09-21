@@ -141,4 +141,15 @@ describe Curator do
       expect(subject.artists.count).to eql(6)
     end
   end
+
+  describe '#photographs_taken_between' do
+    it 'returns an array of photographs created between two dates' do
+      subject.load_artists('./data/artists.csv')
+      subject.load_photographs('./data/photographs.csv')
+      photo1 = subject.photographs[0]
+      photo4 = subject.photographs[3]
+
+      expect(subject.photographs_taken_between(1950..1965)).to eql([photo1, photo4])
+    end
+  end
 end

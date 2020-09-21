@@ -49,4 +49,9 @@ class Curator
     artist_data = CSV.read(file, headers: true, header_converters: :symbol)
     artist_data.each { |artist| add_artist(Artist.new(artist)) }
   end
+
+  def photographs_taken_between(year_range)
+    years = year_range.to_a
+    photographs.select { |photo| years.include?(photo.year.to_i) }
+  end
 end
