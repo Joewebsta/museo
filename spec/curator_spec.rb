@@ -94,7 +94,7 @@ describe Curator do
     end
   end
 
-  describe '#photographs_take_by_artist_from' do
+  describe '#photographs_taken_by_artist_from' do
     before do
     end
 
@@ -117,14 +117,28 @@ describe Curator do
         subject.add_photograph(photo4)
 
         photos_array = [photo2, photo3, photo4]
-        expect(subject.photographs_take_by_artist_from('United States')).to eql(photos_array)
+        expect(subject.photographs_taken_by_artist_from('United States')).to eql(photos_array)
       end
     end
 
     context 'when artists are not from the provided country' do
       it 'returns an empty array' do
-        expect(subject.photographs_take_by_artist_from('Argentina')).to eql([])
+        expect(subject.photographs_taken_by_artist_from('Argentina')).to eql([])
       end
+    end
+  end
+
+  describe '#load_photographs' do
+    it 'populates photographs array' do
+      subject.load_photographs('./data/photographs.csv')
+      expect(subject.photographs.count).to eql(4)
+    end
+  end
+
+  describe '#load_artists' do
+    it 'populates artists array' do
+      subject.load_artists('./data/artists.csv')
+      expect(subject.artists.count).to eql(6)
     end
   end
 end

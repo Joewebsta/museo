@@ -1,3 +1,7 @@
+require './lib/photograph'
+require './lib/artist'
+require 'csv'
+
 class Curator
   attr_reader :artists, :photographs
 
@@ -28,11 +32,21 @@ class Curator
     photographs_by_artist.select { |_artist, photos| photos.count >= 2 }.keys
   end
 
-  def photographs_take_by_artist_from(country)
+  def photographs_taken_by_artist_from(country)
     artist_ids = artists.select { |artist| artist.country == country }.map(&:id)
 
     photographs.each_with_object([]) do |photograph, array|
       array << photograph if artist_ids.include?(photograph.artist_id)
     end
+  end
+
+  def load_photographs(file)
+    photo_data = CSV.read(file, headers: true, header_converters: :symbol)
+    photo_data.each { |photo| add_photograph(Photograph.new(photo)) }
+  end
+
+  def load_artists(file)
+    artist_data = CSV.read(file, headers: true, header_converters: :symbol)
+    artist_data.each { |artist| add_artist(Artist.new(artist)) }
   end
 end
